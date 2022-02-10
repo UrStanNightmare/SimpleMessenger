@@ -1,0 +1,98 @@
+plugins {
+    id 'java'
+    id 'com.dua3.javafxgradle7plugin' version '0.0.9'
+}
+
+group 'org.example'
+version '1.0.0'
+
+sourceCompatibility = 16
+targetCompatibility = 16
+
+
+repositories {
+    mavenCentral()
+}
+
+sourceSets {
+    main {
+        java {
+            srcDir 'src'
+        }
+    }
+}
+
+javafx {
+    version = "17"
+    modules = ['javafx.controls', 'javafx.graphics']
+}
+
+dependencies {
+
+    implementation 'org.slf4j:slf4j-api:1.7.32'
+    implementation 'ch.qos.logback:logback-classic:1.2.8'
+
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.1'
+
+    implementation 'org.controlsfx:controlsfx:11.1.1'
+}
+
+jar.enabled(false)
+
+task clientFatJar(type: Jar) {
+    dependsOn compileJava
+
+    baseName = "client"
+    manifest {
+        attributes('Main-Class': 'ru.ao.simplemessenger.client.Main')
+    }
+
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    } {
+        exclude "META-INF/*.SF"
+        exclude "META-INF/*.DSA"
+        exclude "META-INF/*.RSA"
+    }
+    exclude('ru/cft/focusstart/task6/server/**')
+
+    with jar
+
+
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
+
+task serverFatJar(type: Jar) {
+    dependsOn compileJava
+
+    baseName = "server"
+    manifest {
+        attributes('Main-Class': 'ru.ao.simplemessenger.server.Main')
+    }
+
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    } {
+        exclude "META-INF/*.SF"
+        exclude "META-INF/*.DSA"
+        exclude "META-INF/*.RSA"
+    }
+    exclude('ru/cft/focusstart/task6/client/**')
+    exclude('icons')
+    exclude('styles')
+    exclude('javafx/**')
+    exclude('javafx*')
+
+
+
+    with jar
+
+
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
+
+
+artifacts {
+    archives clientFatJar, serverFatJar
+}
+
