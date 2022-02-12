@@ -54,7 +54,7 @@ task clientFatJar(type: Jar) {
         exclude "META-INF/*.DSA"
         exclude "META-INF/*.RSA"
     }
-    exclude('ru/cft/focusstart/task6/server/**')
+    exclude('ru/ao/simplemessenger/server/**')
 
     with jar
 
@@ -77,7 +77,7 @@ task serverFatJar(type: Jar) {
         exclude "META-INF/*.DSA"
         exclude "META-INF/*.RSA"
     }
-    exclude('ru/cft/focusstart/task6/client/**')
+    exclude('ru/ao/simplemessenger/client/**')
     exclude('icons')
     exclude('styles')
     exclude('javafx/**')
